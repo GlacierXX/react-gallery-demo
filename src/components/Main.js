@@ -147,64 +147,67 @@ class AppComponent extends React.Component {
         this.reArrange(index);
       };
     };
-  }
-  /*
-   * 重新布局图片
-   * @param centerIndex 指定中间图片
-   */
-  reArrange(centerIndex) {
-    let imgsArrangeArr = this.state.imgsArrangeArr,
-        centerPos = this.constant.centerPos,
-        hLeftXPosRange = this.constant.hPosRange.leftSecX,
-        hRightXPosRange = this.constant.hPosRange.rightSecX,
-        hYPosRange = this.constant.hPosRange.y,
-        vXPosRange = this.constant.vPosRange.x,
-        vTopYPosRange = this.constant.vPosRange.topSecY;
-    // 居中图片信息数组
-    let imgsCenterArrangeArr = imgsArrangeArr.splice(centerIndex, 1);
-    imgsCenterArrangeArr[0] = {
-      pos: centerPos,
-      rotate: 0,
-      isCenter: true
-    };
-    // 上侧图片信息数组
-    let imgsTopNum = Math.floor(Math.random() * 2),
-        topIndex = Math.floor((Math.random() * (imgsArrangeArr.length - imgsTopNum))),
-        imgsTopArrangeArr = imgsArrangeArr.splice(topIndex, imgsTopNum);
-    imgsTopArrangeArr.forEach(function (pos, index) {
-      imgsTopArrangeArr[index] = {
-        pos: {
-          left: getRangeRandom(vXPosRange[0], vXPosRange[1]),
-          top: getRangeRandom(vTopYPosRange[0], vTopYPosRange[1])
-        },
-        rotate: get30DegRandom()
-      }
-    });
-    // 左右两侧图片信息数组
-    for (let i = 0, j = imgsArrangeArr.length, k = j / 2; i < j; i++) {
-      let hPosRangeX = null;
-      if (i < k) {
-        hPosRangeX = hLeftXPosRange;
-      } else {
-        hPosRangeX = hRightXPosRange;
-      }
-      imgsArrangeArr[i] = {
-        pos: {
-          left: getRangeRandom(hPosRangeX[0], hPosRangeX[1]),
-          top: getRangeRandom(hYPosRange[0], hYPosRange[1])
-        },
-        rotate: get30DegRandom()
+    /*
+     * 重新布局图片
+     * @param centerIndex 指定中间图片
+     */
+    this.reArrange = (centerIndex) => {
+      let imgsArrangeArr = this.state.imgsArrangeArr,
+          centerPos = this.constant.centerPos,
+          hLeftXPosRange = this.constant.hPosRange.leftSecX,
+          hRightXPosRange = this.constant.hPosRange.rightSecX,
+          hYPosRange = this.constant.hPosRange.y,
+          vXPosRange = this.constant.vPosRange.x,
+          vTopYPosRange = this.constant.vPosRange.topSecY;
+      // 居中图片信息数组
+      let imgsCenterArrangeArr = imgsArrangeArr.splice(centerIndex, 1);
+      imgsCenterArrangeArr[0] = {
+        pos: centerPos,
+        rotate: 0,
+        isCenter: true
       };
+      // 上侧图片信息数组
+      let imgsTopNum = Math.floor(Math.random() * 2),
+          topIndex = Math.floor((Math.random() * (imgsArrangeArr.length - imgsTopNum))),
+          imgsTopArrangeArr = imgsArrangeArr.splice(topIndex, imgsTopNum);
+      imgsTopArrangeArr.forEach(function (pos, index) {
+        imgsTopArrangeArr[index] = {
+          pos: {
+            left: getRangeRandom(vXPosRange[0], vXPosRange[1]),
+            top: getRangeRandom(vTopYPosRange[0], vTopYPosRange[1])
+          },
+          rotate: get30DegRandom(),
+          isCenter: false
+        }
+      });
+      // 左右两侧图片信息数组
+      for (let i = 0, j = imgsArrangeArr.length, k = j / 2; i < j; i++) {
+        let hPosRangeX = null;
+        if (i < k) {
+          hPosRangeX = hLeftXPosRange;
+        } else {
+          hPosRangeX = hRightXPosRange;
+        }
+        imgsArrangeArr[i] = {
+          pos: {
+            left: getRangeRandom(hPosRangeX[0], hPosRangeX[1]),
+            top: getRangeRandom(hYPosRange[0], hYPosRange[1])
+          },
+          rotate: get30DegRandom(),
+          isCenter: false
+        };
+      }
+      // 信息写回状态数组
+      if (imgsTopArrangeArr && imgsTopArrangeArr[0]) {
+        imgsArrangeArr.splice(topIndex, 0, imgsTopArrangeArr[0]);
+      }
+      imgsArrangeArr.splice(centerIndex, 0, imgsCenterArrangeArr[0]);
+      this.setState({
+        imgsArrangeArr: imgsArrangeArr
+      });
     }
-    // 信息写回状态数组
-    imgsArrangeArr.splice(centerIndex, 0, imgsCenterArrangeArr[0]);
-    if (imgsTopArrangeArr && imgsTopArrangeArr[0]) {
-      imgsArrangeArr.splice(topIndex, 0, imgsTopArrangeArr[0]);
-    }
-    this.setState({
-      imgsArrangeArr: imgsArrangeArr
-    });
   }
+
   componentDidMount() {
     // 舞台大小
     let stageDOM = this.refs.stage,
