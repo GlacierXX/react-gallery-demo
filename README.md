@@ -1,6 +1,6 @@
 # react-gallery-demo
 
-A gallery demo implemented through the react.js.
+A gallery demo implemented through the reactjs.
 
 ## **Demo**
 
